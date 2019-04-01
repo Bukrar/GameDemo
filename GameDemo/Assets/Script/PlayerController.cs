@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody playRigidbody;
-    private float speed = 0.5f;
+    private float speed = 3f;
     private Vector3 movement;
     private Animator animator;
 
@@ -13,6 +13,15 @@ public class PlayerController : MonoBehaviour
     {
         animator =GetComponent<Animator>();
         playRigidbody = GetComponent<Rigidbody>();
+    }
+
+    private void FixedUpdate()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+        Move(h, v);
+        TurnBody();
+        walk(h, v);
     }
 
     private void Move(float h, float v)
@@ -28,11 +37,17 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("IsWalk", isWalk);
     }
 
-    private void FixedUpdate()
+    private void TurnBody()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        Move(h,v);
-        walk(h,v);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit raycastHit;
+        if (Physics.Raycast(ray, out raycastHit, 100f))
+        {
+            Vector3 playerToMouse = raycastHit.point - transform.position;
+            playerToMouse.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(playerToMouse);
+            playRigidbody.MoveRotation(targetRotation);
+        }
     }
+
 }
