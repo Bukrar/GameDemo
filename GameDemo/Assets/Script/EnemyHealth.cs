@@ -2,15 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyHealth : MonoBehaviour
 {
     public int heal = 100;
     private bool isDeath;
-    // Start is called before the first frame update
-    void Start()
+    private Animator animator;
+
+    private void Awake()
     {
-        
+        animator = GetComponent<Animator>();
+    }
+
+    void Update()
+    {
+        if (isDeath);
     }
 
     public void TakeDamage(int DamageAmount)
@@ -25,17 +32,14 @@ public class EnemyHealth : MonoBehaviour
         {
             Death();
         }
-    }
+    }   
 
     private void Death()
-    {
-        Debug.Log("D");
+    {        
         isDeath = true;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        animator.SetTrigger("IsDeath");
+        GetComponent<NavMeshAgent>().enabled = false;
+        GetComponent<EnemyAttack>().enabled = false;
+        GetComponent<EnemyController>().enabled = false;
     }
 }

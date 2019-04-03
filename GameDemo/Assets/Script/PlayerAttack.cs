@@ -6,43 +6,53 @@ public class PlayerAttack : MonoBehaviour
 {
     public int damage = 20;
     private Animator animator;
+    private Animator enemyAnimator;
     private EnemyHealth enemyHealth;
     private bool canAttackRange;
+    private float timer;
+    private float AttackSpeed = 0.5f;
+
+    private void Start()
+    {
+       
+    }
 
     private void Awake()
     {
-        animator = GetComponentInParent<Animator>();
-        GameObject enemy = GameObject.FindGameObjectWithTag("Enemy");
-        enemyHealth = enemy.GetComponent<EnemyHealth>();
+        animator = GetComponentInParent<Animator>();       
     }
 
     void Update()
     {
+        timer += Time.deltaTime;
         bool IsAttack = Input.GetButtonDown("Fire1");
         animator.SetBool("IsAttack", IsAttack);
-
-        if (Input.GetButtonDown("Fire1"))
+        enemyAnimator.SetBool("IsDamage", canAttackRange && IsAttack && timer >= AttackSpeed);
+        if (canAttackRange && IsAttack && timer >= AttackSpeed)
         {
-            enemyHealth.TakeDamage(damage);
+            Attack();
         }
     }
 
     private void Attack()
     {
-       // enemyHealth.b = enemyHealth.b - 5;
+        timer = 0;
+        enemyHealth.TakeDamage(damage);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == enemyHealth.tag)
+        if (other.tag == "Enemy")
         {
+            enemyAnimator = other.GetComponent<Animator>();
+            enemyHealth = other.GetComponent<EnemyHealth>();
             canAttackRange = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == enemyHealth.tag)
+        if (other.tag == "Enemy")
         {
             canAttackRange = false;
         }
