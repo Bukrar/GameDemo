@@ -11,23 +11,25 @@ public class PlayerAttack : MonoBehaviour
     private bool canAttackRange;
     private float timer;
     private float AttackSpeed = 0.5f;
-
-    private void Start()
-    {
-       
-    }
+    private AudioSource audioSource;
 
     private void Awake()
     {
-        animator = GetComponentInParent<Animator>();       
+        animator = GetComponentInParent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
         timer += Time.deltaTime;
         bool IsAttack = Input.GetButtonDown("Fire1");
+        if (IsAttack)
+        {
+            audioSource.Play();
+        }
         animator.SetBool("IsAttack", IsAttack);
         enemyAnimator.SetBool("IsDamage", canAttackRange && IsAttack && timer >= AttackSpeed);
+
         if (canAttackRange && IsAttack && timer >= AttackSpeed)
         {
             Attack();

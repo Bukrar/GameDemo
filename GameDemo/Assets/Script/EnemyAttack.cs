@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyAttack : MonoBehaviour
 {
@@ -22,8 +23,8 @@ public class EnemyAttack : MonoBehaviour
     {
         timer += Time.deltaTime;
         animator.SetBool("EnemyAttack", canAttackRange);
-        if (canAttackRange && timer>= attackSpeed)
-        {         
+        if (canAttackRange && timer >= attackSpeed)
+        {
             Attack();
         }
     }
@@ -48,5 +49,22 @@ public class EnemyAttack : MonoBehaviour
     {
         timer = 0;
         playerHealth.TakeDamage(attackDamage);
+    }
+
+    private void playerIsDeath()
+    {
+        animator.SetTrigger("PlayIsDeath");
+        GetComponent<EnemyController>().enabled = false;
+        GetComponent<NavMeshAgent>().enabled = false;
+    }
+
+    private void OnEnable()
+    {
+        PlayerHealth.PlayerDeathEvent += playerIsDeath;
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.PlayerDeathEvent -= playerIsDeath;
     }
 }

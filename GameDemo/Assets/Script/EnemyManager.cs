@@ -9,7 +9,7 @@ public class EnemyManager : MonoBehaviour
     public float repeatRate = 3f;
     public Transform[] monsterPoint;
     private bool playerIsDeath;
-    
+
     private void playerDeathAction()
     {
         playerIsDeath = true;
@@ -26,7 +26,16 @@ public class EnemyManager : MonoBehaviour
         int pointIndex = Random.Range(0, monsterPoint.Length);
         Instantiate(enemy, monsterPoint[pointIndex].position,
             monsterPoint[pointIndex].rotation);
-            
+    }
+
+    private void OnEnable()
+    {
+        PlayerHealth.PlayerDeathEvent += playerDeathAction;
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.PlayerDeathEvent -= playerDeathAction;
     }
 
     private void Start()

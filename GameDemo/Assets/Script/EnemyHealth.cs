@@ -9,10 +9,12 @@ public class EnemyHealth : MonoBehaviour
     public int heal = 100;
     private bool isDeath;
     private Animator animator;
+    private AudioSource audioSource;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -27,6 +29,7 @@ public class EnemyHealth : MonoBehaviour
             return;
         }
         Debug.Log("T");
+        audioSource.Play();
         heal -= DamageAmount;
         if (heal <= 0)
         {
